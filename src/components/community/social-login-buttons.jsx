@@ -5,12 +5,13 @@ import Typography from '@mui/material/Typography';
 /**
  * SocialLoginButtons 컴포넌트 - 소셜 로그인 버튼 목록
  *
- * Props: 없음 (추후 onLogin 콜백 추가 예정)
+ * Props:
+ * @param {function} onLogin - 로그인 성공 시 호출 콜백 [Optional]
  *
  * Example usage:
- * <SocialLoginButtons />
+ * <SocialLoginButtons onLogin={() => navigate('/posts')} />
  */
-function SocialLoginButtons() {
+function SocialLoginButtons({ onLogin }) {
   /** @todo 실제 OAuth 연동 시 각 핸들러 구현 */
   const providers = [
     {
@@ -58,7 +59,7 @@ function SocialLoginButtons() {
         <Button
           key={ provider.id }
           fullWidth
-          onClick={() => console.log(`${provider.id} 로그인`)}
+          onClick={() => { if (onLogin) onLogin(); }}
           sx={{
             bgcolor: provider.bgcolor,
             color: provider.color,

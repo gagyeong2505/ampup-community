@@ -16,8 +16,8 @@ import SocialLoginButtons from '../components/community/social-login-buttons.jsx
 function LoginPage() {
   const navigate = useNavigate();
 
-  /** @todo 실제 소셜 로그인 연동 시 교체 */
-  const handleGuestLogin = () => {
+  /** @todo 실제 로그인 연동 시 교체 */
+  const handleLogin = () => {
     navigate('/posts');
   };
 
@@ -83,20 +83,21 @@ function LoginPage() {
           </Box>
 
           {/* 소셜 로그인 버튼 */}
-          <SocialLoginButtons />
+          <SocialLoginButtons onLogin={ handleLogin } />
 
           <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.08)' }}>
             <Typography variant='caption' sx={{ color: 'text.secondary', px: 1 }}>또는</Typography>
           </Divider>
 
-          {/* 게스트 입장 (임시) */}
+          {/* 둘러보기 (비로그인 진입) */}
           <Button
             fullWidth
             variant='outlined'
-            onClick={ handleGuestLogin }
+            onClick={ handleLogin }
             sx={{
               borderColor: 'rgba(255,255,255,0.15)',
               color: 'text.secondary',
+              mb: 2,
               '&:hover': {
                 borderColor: 'rgba(176, 38, 255, 0.4)',
                 color: 'primary.main',
@@ -107,9 +108,30 @@ function LoginPage() {
             둘러보기
           </Button>
 
+          {/* 회원가입 안내 */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+            <Typography variant='caption' sx={{ color: 'rgba(255,255,255,0.35)' }}>
+              아직 계정이 없으신가요?
+            </Typography>
+            <Button
+              size='small'
+              onClick={() => navigate('/signup')}
+              sx={{
+                color: 'primary.main',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                p: 0,
+                minWidth: 'auto',
+                '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' },
+              }}
+            >
+              회원가입
+            </Button>
+          </Box>
+
           <Typography
             variant='caption'
-            sx={{ display: 'block', textAlign: 'center', mt: 3, color: 'rgba(255,255,255,0.3)', lineHeight: 1.6 }}
+            sx={{ display: 'block', textAlign: 'center', mt: 3, color: 'rgba(255,255,255,0.2)', lineHeight: 1.6 }}
           >
             로그인 시 서비스 이용약관 및<br />개인정보처리방침에 동의하게 됩니다.
           </Typography>

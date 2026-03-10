@@ -132,7 +132,7 @@ function AppHeader() {
             },
           }}
         >
-          <MenuItem onClick={handleMenuClose} sx={{ fontSize: '0.9rem' }}>내 프로필</MenuItem>
+          <MenuItem onClick={() => { handleMenuClose(); navigate('/mypage'); }} sx={{ fontSize: '0.9rem' }}>마이페이지</MenuItem>
           <MenuItem onClick={() => { handleMenuClose(); navigate('/login'); }} sx={{ fontSize: '0.9rem', color: 'error.main' }}>로그아웃</MenuItem>
         </Menu>
       </Toolbar>
