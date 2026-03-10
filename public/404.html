@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AmpUp</title>
+    <script>
+      // 현재 URL을 sessionStorage에 저장 후 index.html로 리다이렉트
+      sessionStorage.setItem('spa-redirect', window.location.href);
+      window.location.replace('/ampup-community/');
+    </script>
+  </head>
+  <body></body>
+</html>
