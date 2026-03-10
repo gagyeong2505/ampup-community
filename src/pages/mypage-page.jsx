@@ -5,49 +5,59 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmailIcon from '@mui/icons-material/Email';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
-/** @todo 실제 로그인 상태 관리 연동 시 교체 */
-const MOCK_USER = {
-  email: 'user@ampup.kr',
-  nickname: '기타리스트김',
-  joinedAt: '2025-01-15',
-  bio: '밴드 공연 500회 이상 관람. 혁오, 실리카겔 덕후.',
-  postCount: 12,
-  likeCount: 87,
-};
+import { loadUser, clearUser } from '../hooks/use-auth.jsx';
+import { usePosts } from '../context/posts-context.jsx';
 
 /**
- * MypagePage 컴포넌트 - 마이페이지 (내 정보 확인)
+ * MypagePage 컴포넌트 - 마이페이지
+ * 현재 로그인한 사용자의 정보(localStorage)를 출력
  *
  * Props: 없음
  */
 function MypagePage() {
   const navigate = useNavigate();
+  const { posts } = usePosts();
+
+  // 현재 로그인 사용자 로드 (localStorage 기반)
+  const user = loadUser();
+
+  // 로그인 정보 없으면 로그인 페이지로
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
+
+  // 현재 사용자가 작성한 게시물 수
+  const myPostCount = posts.filter((p) => p.author.nickname === user.nickname).length;
 
   const infoItems = [
     {
       icon: <EmailIcon sx={{ fontSize: '1rem', color: 'primary.main' }} />,
       label: '이메일',
-      value: MOCK_USER.email,
+      value: user.email,
     },
     {
       icon: <PersonIcon sx={{ fontSize: '1rem', color: 'secondary.main' }} />,
       label: '닉네임',
-      value: MOCK_USER.nickname,
+      value: user.nickname,
     },
     {
       icon: <CalendarTodayIcon sx={{ fontSize: '1rem', color: '#00C9FF' }} />,
       label: '가입일',
-      value: MOCK_USER.joinedAt,
+      value: user.joinedAt,
     },
   ];
+
+  const handleLogout = () => {
+    clearUser(); // 현재 사용자 상태 초기화
+    navigate('/login');
+  };
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: { xs: 3, md: 5 } }}>
@@ -83,14 +93,14 @@ function MypagePage() {
                 border: '2px solid rgba(176, 38, 255, 0.5)',
               }}
             >
-              { MOCK_USER.nickname[0] }
+              { user.nickname[0].toUpperCase() }
             </Avatar>
             <Box>
               <Typography variant='h5' sx={{ fontWeight: 700 }}>
-                { MOCK_USER.nickname }
+                { user.nickname }
               </Typography>
               <Typography variant='body2' sx={{ color: 'text.secondary', mt: 0.3 }}>
-                { MOCK_USER.bio }
+                AmpUp 멤버
               </Typography>
             </Box>
           </Box>
@@ -130,7 +140,7 @@ function MypagePage() {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
               <MusicNoteIcon sx={{ fontSize: '1rem', color: 'primary.main' }} />
               <Typography variant='h5' sx={{ fontWeight: 800, color: 'primary.main' }}>
-                { MOCK_USER.postCount }
+                { myPostCount }
               </Typography>
             </Box>
             <Typography variant='caption' sx={{ color: 'text.secondary' }}>작성한 후기</Typography>
@@ -140,7 +150,7 @@ function MypagePage() {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
               <FavoriteIcon sx={{ fontSize: '1rem', color: 'secondary.main' }} />
               <Typography variant='h5' sx={{ fontWeight: 800, color: 'secondary.main' }}>
-                { MOCK_USER.likeCount }
+                { posts.filter((p) => p.author.nickname === user.nickname).reduce((acc, p) => acc + p.likeCount, 0) }
               </Typography>
             </Box>
             <Typography variant='caption' sx={{ color: 'text.secondary' }}>받은 좋아요</Typography>
@@ -151,7 +161,7 @@ function MypagePage() {
         <Button
           fullWidth
           variant='outlined'
-          onClick={() => navigate('/login')}
+          onClick={ handleLogout }
           sx={{
             mt: 3,
             borderColor: 'rgba(255,255,255,0.1)',

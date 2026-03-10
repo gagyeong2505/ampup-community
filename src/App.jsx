@@ -7,9 +7,11 @@ import PostListPage from './pages/post-list-page.jsx';
 import PostDetailPage from './pages/post-detail-page.jsx';
 import PostWritePage from './pages/post-write-page.jsx';
 import MypagePage from './pages/mypage-page.jsx';
+import { PostsProvider } from './context/posts-context.jsx';
 
 function App() {
   return (
+    <PostsProvider>
     <BrowserRouter basename='/ampup-community'>
       <Box sx={{ width: '100%', minHeight: '100vh', bgcolor: 'background.default' }}>
         <Routes>
@@ -41,6 +43,7 @@ function App() {
         </Routes>
       </Box>
     </BrowserRouter>
+    </PostsProvider>
   );
 }
 

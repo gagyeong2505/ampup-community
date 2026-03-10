@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePosts } from '../context/posts-context.jsx';
+import { loadUser } from '../hooks/use-auth.jsx';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -36,6 +38,8 @@ const textFieldSx = {
  */
 function PostWritePage() {
   const navigate = useNavigate();
+  const { addPost } = usePosts();
+  const currentUser = loadUser();
 
   const [form, setForm] = useState({
     postType: '후기',
@@ -68,8 +72,21 @@ function PostWritePage() {
   };
 
   const handleSubmit = () => {
-    /** @todo 실제 API 연동 시 교체 */
-    console.log('제출:', form, setlist);
+    const author = currentUser
+      ? { nickname: currentUser.nickname, profileInitial: currentUser.nickname[0].toUpperCase() }
+      : { nickname: '익명', profileInitial: '익' };
+
+    addPost({
+      postType: form.postType,
+      title: form.title,
+      content: form.content,
+      artistName: form.artistName || null,
+      venueName: form.venueName || null,
+      concertDate: form.concertDate || null,
+      rating: form.rating || null,
+      author,
+      setlist: setlist.filter((s) => s.title.trim()),
+    });
     navigate('/posts');
   };
 

@@ -41,7 +41,8 @@ function SignupPage() {
 
   /** @todo 실제 회원가입 API 연동 시 교체 */
   const handleSubmit = () => {
-    navigate('/posts');
+    // 회원가입 성공 후 자동 로그인 금지 → 로그인 화면으로 이동
+    navigate('/login');
   };
 
   const isDisabled =
